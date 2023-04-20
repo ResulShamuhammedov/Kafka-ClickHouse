@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -21,7 +21,7 @@ type RequestBody struct {
 	Age  int    `json:"age"`
 }
 
-func (h *Handler) handleGetMetrics(c *fiber.Ctx) error {
+func (h *Handler) HandleGetMetrics(c *fiber.Ctx) error {
 	body := new(RequestBody)
 	if err := c.BodyParser(body); err != nil {
 		return newErrorResponse(c, http.StatusBadRequest, err.Error())

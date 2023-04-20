@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/ResulShamuhammedov/Kafka-Clickhouse/server/handler"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/segmentio/kafka-go"
 
@@ -20,11 +22,11 @@ func main() {
 	})
 	defer writer.Close()
 
-	handler := NewHandler(writer)
+	handler := handler.NewHandler(writer)
 
 	app := fiber.New()
 
-	app.Post("/metric", handler.handleGetMetrics)
+	app.Post("/metric", handler.HandleGetMetrics)
 
 	err := app.Listen(":8080")
 	if err != nil {
