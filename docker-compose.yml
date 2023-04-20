@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:3'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    command:  kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test-topic
+  
+  clickhouse:
+    image: 'clickhouse/clickhouse-server'
+    ports:
+      - '8123:8123'
+      - '9000:9000'
+    env_file:
+      - .env
+    environment:
+      - CLICKHOUSE_USER=${CH_USERNAME}
+      - CLICKHOUSE_DATABASE=${CH_NAME}
+      - CLICKHOUSE_PASSWORD=${CH_PASSWORD}
