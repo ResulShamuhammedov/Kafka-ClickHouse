@@ -22,7 +22,7 @@ func main() {
 	})
 	defer writer.Close()
 
-	handler := handler.NewHandler(writer)
+	handler := handler.NewHandlerV1(writer)
 
 	app := fiber.New()
 

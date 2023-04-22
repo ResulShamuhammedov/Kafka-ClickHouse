@@ -2,6 +2,7 @@ version: '3.7'
 
 services:
   zookeeper:
+    container_name: zookeeper 
     image: 'bitnami/zookeeper:3'
     ports:
       - '2181:2181'
@@ -9,6 +10,7 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
 
   kafka:
+    container_name: kafka
     image: 'bitnami/kafka:latest'
     ports:
       - '9092:9092'
@@ -16,9 +18,10 @@ services:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
       - ALLOW_PLAINTEXT_LISTENER=yes
-    # command:  /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test-topic
+    # command:  /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 1 --topic test-topic
   
   clickhouse:
+    container_name: clickhouse
     image: 'clickhouse/clickhouse-server'
     ports:
       - '8123:8123'
