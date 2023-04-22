@@ -17,12 +17,12 @@ func main() {
 	}
 
 	writer := kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{"localhost:9092"},
+		Brokers: []string{"kafka:9092"},
 		Topic:   "test-topic",
 	})
 	defer writer.Close()
 
-	handler := handler.NewHandler(writer)
+	handler := handler.NewHandlerV1(writer)
 
 	app := fiber.New()
 
