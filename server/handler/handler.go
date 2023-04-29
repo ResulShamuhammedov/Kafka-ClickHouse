@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/Shopify/sarama"
 	"github.com/gofiber/fiber/v2"
@@ -31,12 +32,23 @@ type RequestBody struct {
 	Age  int    `json:"age"`
 }
 
+type Message struct {
+	Name      string    `json:"name"`
+	Age       int       `json:"age"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 func (h *HandlerV1) HandleGetMetrics(c *fiber.Ctx) error {
 	body := new(RequestBody)
 	if err := c.BodyParser(body); err != nil {
 		return newErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
-	jsonData, err := json.Marshal(body)
+
+	jsonData, err := json.Marshal(Message{
+		Name:      body.Name,
+		Age:       body.Age,
+		CreatedAt: time.Now(),
+	})
 	if err != nil {
 		return newErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
