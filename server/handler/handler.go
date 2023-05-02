@@ -33,9 +33,9 @@ type RequestBody struct {
 }
 
 type Message struct {
-	Name      string    `json:"name"`
-	Age       int       `json:"age"`
-	CreatedAt time.Time `json:"created_at"`
+	Name      string `json:"name"`
+	Age       int    `json:"age"`
+	CreatedAt string `json:"created_at"`
 }
 
 func (h *HandlerV1) HandleGetMetrics(c *fiber.Ctx) error {
@@ -47,7 +47,7 @@ func (h *HandlerV1) HandleGetMetrics(c *fiber.Ctx) error {
 	jsonData, err := json.Marshal(Message{
 		Name:      body.Name,
 		Age:       body.Age,
-		CreatedAt: time.Now(),
+		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 	})
 	if err != nil {
 		return newErrorResponse(c, http.StatusInternalServerError, err.Error())

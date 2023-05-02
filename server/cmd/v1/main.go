@@ -4,13 +4,11 @@ import (
 	"context"
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/ResulShamuhammedov/Kafka-Clickhouse/server/handler"
 	"github.com/ResulShamuhammedov/Kafka-Clickhouse/server/repository"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/robfig/cron"
 	"github.com/segmentio/kafka-go"
 
 	"github.com/joho/godotenv"
@@ -35,10 +33,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	batchSize, err := strconv.Atoi(os.Getenv("BATCH_SIZE"))
-	if err != nil {
-		log.Fatal(err)
-	}
+	// batchConf, err := strconv.Atoi(os.Getenv("BATCH_SIZE"))
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// // batchSize := uint64(batchConf)
 
 	conn, err := repository.NewClickhouseDB(repository.ClickhouseConfig{
 		Host:     os.Getenv("CH_HOST"),
@@ -53,6 +52,10 @@ func main() {
 
 	db := repository.NewDB(conn)
 
+	err = db.Conn.Exec(context.Background(), "SET stream_poll_timeout_ms=20000")
+	if err != nil {
+		log.Fatal(err)
+	}
 	/*
 		// To create Kafka Engine Table there must be Kafka broker
 		err = db.Conn.Exec(context.Background(), createQueueTable)
@@ -78,14 +81,14 @@ func main() {
 	app.Post("/metric", handler.HandleGetMetrics)
 
 	// Set up cron job
-	cronJob := cron.New()
-	cronJob.AddFunc("@every 5m", func() {
-		err := db.BatchInsert(context.Background(), batchSize)
-		if err != nil {
-			log.Fatal(err)
-		}
-	})
-	cronJob.Start()
+	// cronJob := cron.New()
+	// cronJob.AddFunc("@every 5m", func() {
+	// 	err := db.BatchInsert(context.Background(), batchSize)
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// })
+	// cronJob.Start()
 
 	err = app.Listen(":8080")
 	if err != nil {
