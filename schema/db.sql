@@ -10,5 +10,9 @@ CREATE TABLE default.info (
 
 -- SET stream_poll_timeout_ms=20000;
 
+SET max_insert_block_size=1000000;
+
+SET stream_flush_interval_ms=7500;
+
 CREATE MATERIALIZED VIEW IF NOT EXISTS default.mv_info 
 TO default.info AS SELECT * FROM default.info_queue;
