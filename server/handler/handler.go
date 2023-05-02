@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Shopify/sarama"
 	"github.com/gofiber/fiber/v2"
@@ -45,6 +46,22 @@ func (h *HandlerV1) HandleGetMetrics(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		return newErrorResponse(c, http.StatusInternalServerError, err.Error())
+	}
+	return c.SendStatus(http.StatusOK)
+}
+
+func (h *HandlerV1) HandleInsert(c *fiber.Ctx) error {
+	for i := 1; i <= 1000000; i++ {
+		jsonData, _ := json.Marshal(RequestBody{
+			Name: strconv.Itoa(i),
+			Age:  i,
+		})
+		err := h.KafkaWriter.WriteMessages(c.UserContext(), kafka.Message{
+			Value: jsonData,
+		})
+		if err != nil {
+			return newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 	}
 	return c.SendStatus(http.StatusOK)
 }
