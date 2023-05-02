@@ -27,7 +27,7 @@ func main() {
 	app := fiber.New()
 
 	app.Post("/metric", handler.HandleGetMetrics)
-	app.Post("/`insert`", handler.HandleInsert)
+	app.Post("/insert", handler.HandleInsert)
 
 	err := app.Listen(":8080")
 	if err != nil {
