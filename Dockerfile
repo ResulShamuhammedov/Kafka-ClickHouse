@@ -8,6 +8,6 @@ RUN go mod download
 
 COPY ./ ./
 
-RUN go build -o backend ./server/cmd/v1/main.go
+RUN go build -o backend ./server/cmd/v3/main.go
 
 CMD ["./backend"]
